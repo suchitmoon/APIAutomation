@@ -28,6 +28,20 @@ public void Test1(){
 
 }
 
+    @Test
+    public void test2(){
+
+        Response response = given()
+        .when()
+        .get("https://jsonplaceholder.typicode.com/comments")
+        .then()
+        .statusCode(200)
+        .extract()
+        .response();
+
+            assertThat(response.jsonPath().getList(""), hasSize(500));
+
+    }
 
 
 
