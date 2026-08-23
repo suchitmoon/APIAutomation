@@ -6,6 +6,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import org.testng.annotations.Test;
 import static org.hamcrest.Matchers.*;
 
+import java.util.Arrays;
+import java.util.List;
 
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
@@ -40,6 +42,46 @@ public void Test1(){
         .response();
 
             assertThat(response.jsonPath().getList(""), hasSize(500));
+
+    }
+
+
+    @Test
+    public void Test3(){
+
+            Response response = given()
+            .when()
+            .get("https://jsonplaceholder.typicode.com/comments?postId=1")
+            .then()
+            .extract()
+            .response();
+
+            List<String> expectedEmails = Arrays.asList("Eliseo@gardner.biz", "Jayne_Kuhic@sydney.com", "Nikita@garfield.biz","Lew@alysha.tv","Hayden@althea.biz");
+
+            assertThat(response.jsonPath().getList("email"),contains(expectedEmails.toArray(new String[0])));
+
+
+    }
+
+
+    @Test
+    public void Test4(){
+
+            Response response = given()
+            .header("x-api-key","free_user_3HdqfcVy39J3k1hVHfpaNPTFYhY")
+            .when()
+            .get("https://reqres.in/api/users")
+            .then()
+            .statusCode(200)
+            .extract()
+            .response();
+
+            response.then().body("data[0].id",equalTo(1));
+             response.then().body("data[4].id", is(5));
+        response.then().body("data[1].email", is("janet.weaver@reqres.in"));
+        response.then().body("data[1].first_name", is("Janet"));
+        response.then().body("data[1].last_name", is("Weaver"));
+        response.then().body("data[2].avatar", is("https://reqres.in/img/faces/3-image.jpg"));
 
     }
 
