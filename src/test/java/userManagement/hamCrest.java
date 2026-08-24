@@ -8,6 +8,7 @@ import static org.hamcrest.Matchers.*;
 
 import java.util.Arrays;
 import java.util.List;
+import static org.testng.Assert.assertEquals;
 
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
@@ -86,7 +87,33 @@ public void Test1(){
     }
 
 
+    @Test
+    public void Test5(){
 
+            Response response = given()
+            .queryParam("page",2)
+            .when()
+            .get("https://reqres.in/api/users");
+
+         int actualStatusCode = response.statusCode();
+         assertEquals(actualStatusCode,200);
+
+    }
+
+    @Test
+    public void Test6(){
+
+            Response response = given()
+            .queryParam("page",2)
+            .queryParam("per_page",5)
+            .queryParam("dfdf",45)
+            .when()
+            .get("https://reqres.in/api/users")
+           .then()
+            .statusCode(200).extract().response();
+
+
+}
 }
 
 
