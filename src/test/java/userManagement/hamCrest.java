@@ -4,6 +4,9 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import org.testng.annotations.Test;
+
+import core.StatusCode;
+
 import static org.hamcrest.Matchers.*;
 
 import java.util.Arrays;
@@ -110,7 +113,7 @@ public void Test1(){
             .when()
             .get("https://reqres.in/api/users")
            .then()
-            .statusCode(200).extract().response();
+            .statusCode(StatusCode.SUCCESS.code).extract().response();
 
 
 }
