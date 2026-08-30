@@ -4,13 +4,16 @@ import static io.restassured.RestAssured.given;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
-import java.text.ParseException;
 
+import static org.hamcrest.Matchers.*;
+
+import org.json.simple.parser.ParseException;
 import org.hamcrest.Description;
 import org.testng.annotations.Test;
 
 import io.restassured.response.Response;
 import utils.JsonReader;
+import utils.PropertyReader;
 
 public class auth {
 
@@ -61,27 +64,43 @@ public void verifyStatusCodeDelete() {
 
 }
 
-    @Test(description = "ValidateWithTestDataFromJsonFile")
-    public void Test3() throws IOException, ParseException {
-
-      String username = JsonReader.getTestData("username");
+     @Test(description = "ValidateWithTestDataFromJsonFile")
+  public void Test3() throws IOException, ParseException {
+      String username = JsonReader.getTestData("username"); 
       String password = JsonReader.getTestData("password");
+      System.out.println( username +" : "+ password);
+  
+      Response rep = given()
+              .auth()
+              .basic(username, password)
+              .when()
+              .get("https://postman-echo.com/basic-auth");
+  
+      int statusCode = rep.getStatusCode();
+      assertEquals(statusCode, 200);
+      System.out.println("Response Body : " + rep.getBody().asString());
+      System.out.println("Test data from JSON file is used successfully.");
+  }
+            
 
 
-            Response rep = given()
-                            .auth()
-                            .basic(username, password)
-                            .when()
-                            .get("https://postman-echo.com/basic-auth"); 
+    @Test(description = "validateWithDataFromPropertyFile")
+  public void Test4() {
+     
+      
 
-
-                            int statusCode = rep.getStatusCode();
-                           
-                            assertEquals(statusCode, 200);
-                                                        
-                            System.out.println("Response Body : "+ rep.getBody().asString());
-
+      String serverAddress = PropertyReader.propertyReader("config.properties","server");
+          System.out.println("Server Address from Property File: " + serverAddress);
+       
+        given()
+                .when()
+                .get(serverAddress)
+                .then()
+                .statusCode(200)
+                .body("name", equalTo("ReqRes API"))
+                .body("endpoints.free", equalTo("/api/users"));
     }
 
-
 }
+
+
