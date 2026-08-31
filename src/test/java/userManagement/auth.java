@@ -101,6 +101,28 @@ public void verifyStatusCodeDelete() {
                 .body("endpoints.free", equalTo("/api/users"));
     }
 
+
+
+ @Test()
+  public void validateWithDataFromPropertyFileAndTestData()throws IOException, ParseException {
+     
+      
+
+      String serverAddress = PropertyReader.propertyReader("config.properties","server");
+          System.out.println("Server Address from Property File: " + serverAddress);
+
+      String endpoint = JsonReader.getTestData("endpoint");
+      String URL = serverAddress+endpoint;
+       
+       Response rep = given()
+                .when()
+                .get(URL);
+
+        int actualStatusCode = rep.getStatusCode();
+        assertEquals(actualStatusCode, 200);
+
+
+    }
+
+
 }
-
-
